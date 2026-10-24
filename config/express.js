@@ -7,6 +7,7 @@ require('dotenv').config({ quiet: true });
 // Import the routers
 var indexRouter = require('../app/routers/index');
 var projectsRouter = require('../app/routers/projects');
+var referencesRouter = require('../app/routers/references')
 
 // Comma-separated allowlist; falls back to any origin when unset.
 const allowedOrigins = (process.env.CORS_ORIGIN || '')
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routers
 app.use('/', indexRouter);
 app.use('/api/projects', projectsRouter);
+app.use('/api/references', referencesRouter);
 
 
 // catch 404 and forward to error handler

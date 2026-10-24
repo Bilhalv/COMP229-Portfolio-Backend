@@ -2,14 +2,27 @@ const express = require('express');
 var createError = require('http-errors');
 var logger = require('morgan');
 var cors = require('cors');
+require('dotenv').config({ quiet: true });
 
 // Import the routers
 var indexRouter = require('../app/routers/index');
 var projectsRouter = require('../app/routers/projects');
 
+// Comma-separated allowlist; falls back to any origin when unset.
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map(function (origin) {
+    return origin.trim();
+  })
+  .filter(Boolean);
+
 // Config Express
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins.length ? allowedOrigins : true,
+  })
+);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -11,12 +11,19 @@ var debug = require('debug')('comp229:server');
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-configDB();
+var server;
 
-var server = http.createServer(app);
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+configDB()
+  .then(function () {
+    server = http.createServer(app);
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  })
+  .catch(function (error) {
+    console.error('Could not start the server:', error.message);
+    process.exit(1);
+  });
 
 
 /**

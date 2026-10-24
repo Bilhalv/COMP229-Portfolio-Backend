@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 
-let servicesModel = mongoose.Schema(
+let usersModel = mongoose.Schema(
     {
         firstname: String, 
         lastname: String,
@@ -10,12 +10,12 @@ let servicesModel = mongoose.Schema(
         updated: Date 
     },
     {
-        collection: "services"
+        collection: "users"
     }
 );
 
 // Ensure virtual fields are serialised.
-servicesModel.set('toJSON', {
+usersModel.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc, ret) {
@@ -24,4 +24,4 @@ servicesModel.set('toJSON', {
 });
 
 
-module.exports = mongoose.model("Services", servicesModel);
+module.exports = mongoose.model("Users", usersModel);

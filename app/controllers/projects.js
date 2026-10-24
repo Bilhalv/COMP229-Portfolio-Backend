@@ -1,5 +1,40 @@
 let ProjectsModel = require('../models/projects');
 
+module.exports.projectsList = async function (req, res, next) {
+
+    try {
+        let list = await ProjectsModel.find({});
+
+        res.json({
+            success: true,
+            message: "Projects list retrieved successfully.",
+            data: list
+        });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+
+}
+
+module.exports.getByID = async function (req, res, next) {
+
+    try {
+        let projectId = req.params.id;
+        let project = await ProjectsModel.findOne({ _id: projectId });
+
+        res.json({
+            success: true,
+            message: "Project retrieved successfully.",
+            data: project
+        });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+
+}
+
 module.exports.processAdd = async function (req, res, next) {
     try {
         let newProject = ProjectsModel(req.body);
@@ -20,23 +55,6 @@ module.exports.processAdd = async function (req, res, next) {
     }
 };
 
-module.exports.projectsList = async function (req, res, next) {
-
-    try {
-        let list = await ProjectsModel.find({});
-
-        res.json({
-            success: true,
-            message: "Projects list retrieved successfully.",
-            data: list
-        });
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-
-}
-
 module.exports.processEdit = async function (req, res, next) {
 
     try {
@@ -55,24 +73,6 @@ module.exports.processEdit = async function (req, res, next) {
         console.log(error);
         next(error);
     }
-}
-
-module.exports.getByID = async function (req, res, next) {
-
-    try {
-        let projectId = req.params.id;
-        let project = await ProjectsModel.findOne({ _id: projectId });
-
-        res.json({
-            success: true,
-            message: "Project retrieved successfully.",
-            data: project
-        });
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-
 }
 
 module.exports.processDelete = async function (req, res, next) {

@@ -80,8 +80,8 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+    ? addr
+    : addr.port;
 
   console.log('==== The app is running on http://localhost:' + bind );
   debug('Listening on ' + bind);

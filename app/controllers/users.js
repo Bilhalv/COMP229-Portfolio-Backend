@@ -1,0 +1,5 @@
+// GET api/users get all users
+// GET api/users/:id get users by id
+// POST api/users add new user
+// PUT api/users/:id update user by id
+// DELETE api/users/:id remove user by id

@@ -66,7 +66,7 @@ module.exports.processEdit = async function (req, res, next) {
     }
 };
 
-module.exports.performDelete = async function (req, res, next) {
+module.exports.processDelete = module.exports.performDelete = async function (req, res, next) {
     try {
         let result = await ProjectsModel.findByIdAndDelete(req.params.id);
         if (!result) return next(createError(404, 'Project not found.'));

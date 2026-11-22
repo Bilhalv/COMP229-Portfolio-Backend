@@ -30,7 +30,7 @@ module.exports.getByID = async function (req, res, next) {
     }
 };
 
-module.exports.processAdd = async function (req, res, next) {
+module.exports.serviceAdd = module.exports.processAdd = async function (req, res, next) {
     try {
         let result = await ServicesModel.create(req.body);
         console.log(result);
@@ -45,7 +45,7 @@ module.exports.processAdd = async function (req, res, next) {
     }
 };
 
-module.exports.processEdit = async function (req, res, next) {
+module.exports.serviceEdit = module.exports.processEdit = async function (req, res, next) {
     try {
         let payload = { ...req.body };
         delete payload._id;
@@ -66,7 +66,7 @@ module.exports.processEdit = async function (req, res, next) {
     }
 };
 
-module.exports.performDelete = async function (req, res, next) {
+module.exports.serviceDelete = module.exports.performDelete = async function (req, res, next) {
     try {
         let result = await ServicesModel.findByIdAndDelete(req.params.id);
         if (!result) return next(createError(404, 'Service not found.'));

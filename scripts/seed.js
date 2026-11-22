@@ -29,7 +29,7 @@ const projects = [
       'https://gitlab.com/senac-projetos-de-desenvolvimento/2025-debora-pedro-diego/minha-feira-frontend',
     hasEnglishDescription: false,
     description:
-      'A mobile app for discovering and managing street markets (feiras), with login, favorites, reviews, an interactive map, and paginated search.',
+      'A mobile app for discovering and managing street markets (feiras), with login, favorites, reviews, an interactive map, and paginated search. Built with Expo for the Senac 2025 team project, where I acted as frontend developer and drove it to a stable build.',
   },
   {
     name: 'Tormenta 20 Sheet Builder',
@@ -40,7 +40,18 @@ const projects = [
     repoUrl: 'https://github.com/Bilhalv/T20-Sheet',
     hasEnglishDescription: true,
     description:
-      'Interactive character sheet builder for the Brazilian TTRPG Tormenta 20 - assemble stats, skills, and inventory, then export to PDF.',
+      'Interactive character sheet builder for the Brazilian TTRPG Tormenta 20 - assemble stats, skills, and inventory, then export to PDF. A cross-discipline project (DB, web, OOP, mobile) built with React, where I developed the frontend.',
+  },
+  {
+    name: 'Rick and Morty API Test',
+    role: 'Main Developer',
+    completionDate: new Date('2024-09-01'),
+    stack: ['React Native', 'Expo', 'REST API'],
+    image: '/projects/rick-morty.png',
+    repoUrl: 'https://github.com/Bilhalv/Rick-and-morty-API-Test',
+    hasEnglishDescription: true,
+    description:
+      'A compact Expo app that consumes the Rick and Morty API, with a searchable character list, add-to-list, and character detail pages. A focused exercise in React Native navigation and API integration.',
   },
 ];
 
@@ -57,6 +68,18 @@ const services = [
       'Cross-platform mobile apps using React Native and Expo, delivering smooth, native-feeling experiences from a single codebase.',
     tags: ['React Native', 'Expo', 'JavaScript', 'TypeScript'],
   },
+  {
+    title: 'UI/UX Implementation',
+    description:
+      'Translation of complex Figma designs into clean, modular, and production-ready UI components that match the original vision pixel by pixel.',
+    tags: ['Figma', 'HTML5', 'CSS3', 'Component Architecture'],
+  },
+  {
+    title: 'API Integration & General Programming',
+    description:
+      'RESTful API integration, maintainable code with Jest testing, and general programming skills for algorithms and a variety of problem domains.',
+    tags: ['REST API', 'MVC', 'Jest', 'Python'],
+  },
 ];
 
 const references = [
@@ -70,7 +93,14 @@ const references = [
   {
     name: 'Débora Carvalho',
     testimonial:
-      'A great colleague, always willing to help and committed to delivering excellent quality work.',
+      'A great colleague, always willing to help and committed to delivering excellent quality work. It was a pleasure to be part of the same group and share professional experiences.',
+    position: 'Student',
+    company: 'Senac',
+  },
+  {
+    name: 'Diego Nachtigall Morales',
+    testimonial:
+      'A great front-end developer, has vast knowledge and is always looking to improve.',
     position: 'Student',
     company: 'Senac',
   },

@@ -1,11 +1,9 @@
 let ReferencesModel = require('../models/references');
-
-// GET api/references get all references
+let createError = require('http-errors');
 
 module.exports.referencesList = async function (req, res, next) {
     try {
         let list = await ReferencesModel.find({});
-
         res.json({
             success: true,
             message: "References list retrieved successfully.",
@@ -15,17 +13,12 @@ module.exports.referencesList = async function (req, res, next) {
         console.log(error);
         next(error);
     }
-
-}
-
-// GET api/references/:id get references by id
+};
 
 module.exports.getByID = async function (req, res, next) {
-
     try {
-        let referenceId = req.params.id;
-        let reference = await ReferencesModel.findOne({ _id: referenceId });
-
+        let reference = await ReferencesModel.findById(req.params.id);
+        if (!reference) return next(createError(404, 'Reference not found.'));
         res.json({
             success: true,
             message: "Reference retrieved successfully.",
@@ -35,76 +28,55 @@ module.exports.getByID = async function (req, res, next) {
         console.log(error);
         next(error);
     }
-
-}
-
-// POST api/references add new contact
-
-module.exports.referenceAdd = async function (req, res, next) {
-    try {
-        let newReference = ReferencesModel(req.body);
-
-        let result = await ReferencesModel.create(newReference);
-        console.log(result);
-
-        res.json(
-            {
-                success: true,
-                message: "Reference added successfully.",
-                data: result
-            }
-        );
-
-    } catch (error) {
-        next(error);
-    }
 };
 
-// PUT api/references/:id update contact by id
-
-module.exports.referenceEdit = async function (req, res, next) {
-
+module.exports.processAdd = async function (req, res, next) {
     try {
-        let referenceId = req.params.id;
-        let updatedReference = ReferencesModel(req.body);
-        updatedReference._id = referenceId;
-
-        let result = await ReferencesModel.updateOne({ _id: referenceId }, updatedReference);
+        let result = await ReferencesModel.create(req.body);
         console.log(result);
-
-        res.json({
+        res.status(201).json({
             success: true,
-            message: "Reference updated successfully.",
+            message: "Reference added successfully.",
+            data: result
         });
     } catch (error) {
         console.log(error);
         next(error);
     }
-}
+};
 
-// DELETE api/references/:id remove contact by id
-
-module.exports.referenceDelete = async function (req, res, next) {
-
+module.exports.processEdit = async function (req, res, next) {
     try {
-        let referenceId = req.params.id;
-        let result = await ReferencesModel.deleteOne({ _id: referenceId });
+        let payload = { ...req.body };
+        delete payload._id;
+        let result = await ReferencesModel.findByIdAndUpdate(req.params.id, payload, {
+            new: true,
+            runValidators: true,
+            context: 'query'
+        });
+        if (!result) return next(createError(404, 'Reference not found.'));
         console.log(result);
-
-        if (result.deletedCount > 0) {
-            res.json({
-                success: true,
-                message: "Reference deleted successfully."
-            });
-        }
-        else {
-            // Express will catch this on its own.
-            throw new Error('Reference not deleted. Are you sure it exists?')
-        }
-
+        res.json({
+            success: true,
+            message: "Reference updated successfully."
+        });
     } catch (error) {
         console.log(error);
         next(error);
     }
+};
 
-}
+module.exports.performDelete = async function (req, res, next) {
+    try {
+        let result = await ReferencesModel.findByIdAndDelete(req.params.id);
+        if (!result) return next(createError(404, 'Reference not found.'));
+        console.log(result);
+        res.json({
+            success: true,
+            message: "Reference deleted successfully."
+        });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+};

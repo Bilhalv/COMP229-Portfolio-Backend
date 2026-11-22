@@ -2,12 +2,12 @@ let mongoose = require('mongoose');
 
 let usersModel = mongoose.Schema(
     {
-        firstname: String, 
-        lastname: String,
-        email: String,
-        password: String,
-        created: Date,
-        updated: Date 
+        firstname: { type: String, required: [true, 'First name is required.'], trim: true },
+        lastname: { type: String, required: [true, 'Last name is required.'], trim: true },
+        email: { type: String, required: [true, 'Email is required.'], trim: true, unique: true, lowercase: true },
+        password: { type: String, required: [true, 'Password is required.'] },
+        created: { type: Date, default: Date.now },
+        updated: { type: Date, default: Date.now }
     },
     {
         collection: "users"
@@ -19,7 +19,8 @@ usersModel.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc, ret) {
-        delete ret._id
+        delete ret._id;
+        delete ret.password;
     }
 });
 

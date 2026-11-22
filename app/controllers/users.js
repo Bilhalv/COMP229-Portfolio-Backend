@@ -1,11 +1,16 @@
 let UsersModel = require('../models/users');
+let createError = require('http-errors');
 
-// GET api/users get all users
+function sanitizeUser(doc) {
+    if (!doc) return doc;
+    const obj = doc.toJSON ? doc.toJSON() : { ...doc };
+    delete obj.password;
+    return obj;
+}
 
 module.exports.usersList = async function (req, res, next) {
     try {
-        let list = await UsersModel.find({});
-
+        let list = await UsersModel.find({}).select('-password');
         res.json({
             success: true,
             message: "Users list retrieved successfully.",
@@ -15,16 +20,12 @@ module.exports.usersList = async function (req, res, next) {
         console.log(error);
         next(error);
     }
-
-}
-
-// GET api/users/:id get users by id
+};
 
 module.exports.getByID = async function (req, res, next) {
-
     try {
-        let userId = req.params.id;
-        let user = await UsersModel.findOne({ _id: userId });
+        let user = await UsersModel.findById(req.params.id).select('-password');
+        if (!user) return next(createError(404, 'User not found.'));
 
         res.json({
             success: true,
@@ -35,35 +36,30 @@ module.exports.getByID = async function (req, res, next) {
         console.log(error);
         next(error);
     }
-
-}
-
-// POST api/users add new user
+};
 
 module.exports.userAdd = async function (req, res, next) {
     try {
-        let newUser = UsersModel(req.body);
+        let payload = { ...req.body };
+        const now = new Date();
+        payload.created = payload.created ? new Date(payload.created) : now;
+        payload.updated = now;
 
-        let result = await UsersModel.create(newUser);
+        let result = await UsersModel.create(payload);
         console.log(result);
 
-        res.json(
-            {
-                success: true,
-                message: "User added successfully.",
-                data: result
-            }
-        );
-
+        res.status(201).json({
+            success: true,
+            message: "User added successfully.",
+            data: sanitizeUser(result)
+        });
     } catch (error) {
+        console.log(error);
         next(error);
     }
 };
 
-// PUT api/users/:id update user by id
-
 module.exports.userEdit = async function (req, res, next) {
-
     try {
         let userId = req.params.id;
         let updatedUser = { ...req.body };
@@ -72,9 +68,17 @@ module.exports.userEdit = async function (req, res, next) {
             delete updatedUser.password;
         }
 
-        updatedUser._id = userId;
+        updatedUser.updated = new Date();
+        delete updatedUser._id;
+        delete updatedUser.created;
 
-        let result = await UsersModel.updateOne({ _id: userId }, updatedUser);
+        let result = await UsersModel.findByIdAndUpdate(userId, updatedUser, {
+            new: true,
+            runValidators: true,
+            context: 'query'
+        }).select('-password');
+
+        if (!result) return next(createError(404, 'User not found.'));
         console.log(result);
 
         res.json({
@@ -85,31 +89,20 @@ module.exports.userEdit = async function (req, res, next) {
         console.log(error);
         next(error);
     }
-}
-
-// DELETE api/users/:id remove user by id
+};
 
 module.exports.userDelete = async function (req, res, next) {
-
     try {
-        let userId = req.params.id;
-        let result = await UsersModel.deleteOne({ _id: userId });
+        let result = await UsersModel.findByIdAndDelete(req.params.id);
+        if (!result) return next(createError(404, 'User not found.'));
         console.log(result);
 
-        if (result.deletedCount > 0) {
-            res.json({
-                success: true,
-                message: "User deleted successfully."
-            });
-        }
-        else {
-            // Express will catch this on its own.
-            throw new Error('User not deleted. Are you sure it exists?')
-        }
-
+        res.json({
+            success: true,
+            message: "User deleted successfully."
+        });
     } catch (error) {
         console.log(error);
         next(error);
     }
-
-}
+};

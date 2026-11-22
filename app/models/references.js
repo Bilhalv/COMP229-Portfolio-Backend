@@ -2,10 +2,10 @@ let mongoose = require('mongoose');
 
 let referencesModel = mongoose.Schema(
     {
-        name: String, 
-        testimonial: String,
-        position: String, 
-        company: String 
+        name: { type: String, required: [true, 'Name is required.'], trim: true },
+        testimonial: { type: String, required: [true, 'Testimonial is required.'], trim: true },
+        position: { type: String, required: [true, 'Position is required.'], trim: true },
+        company: { type: String, required: [true, 'Company is required.'], trim: true }
     },
     {
         collection: "references"

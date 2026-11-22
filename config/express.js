@@ -45,15 +45,29 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+  let status = err.status || 500;
+  let message = err.message || 'Internal Server Error';
 
-  // render the error json
-  res.status(err.status || 500);
-  res.json(
-    {
-      success: false,
-      message: err.message
-    }
-  );
+  if (err.name === 'CastError') {
+    status = 400;
+    message = `Invalid ${err.path}: ${err.value}`;
+  } else if (err.name === 'ValidationError') {
+    status = 400;
+    message = Object.values(err.errors).map((e) => e.message).join(' ');
+  } else if (err.code === 11000) {
+    status = 409;
+    const field = Object.keys(err.keyValue || {})[0];
+    message = field ? `Duplicate value for ${field}.` : 'Duplicate value.';
+  }
+
+  if (status >= 500) {
+    console.error(err);
+  }
+
+  res.status(status).json({
+    success: false,
+    message,
+  });
 });
 
 module.exports = app;

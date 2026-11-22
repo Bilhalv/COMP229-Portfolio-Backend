@@ -2,8 +2,9 @@ let mongoose = require('mongoose');
 
 let servicesModel = mongoose.Schema(
     {
-        title: String, 
-        description: String 
+        title: String,
+        description: String,
+        tags: [String]
     },
     {
         collection: "services"

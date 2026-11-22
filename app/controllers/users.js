@@ -66,7 +66,12 @@ module.exports.userEdit = async function (req, res, next) {
 
     try {
         let userId = req.params.id;
-        let updatedUser = UsersModel(req.body);
+        let updatedUser = { ...req.body };
+
+        if (!updatedUser.password) {
+            delete updatedUser.password;
+        }
+
         updatedUser._id = userId;
 
         let result = await UsersModel.updateOne({ _id: userId }, updatedUser);
